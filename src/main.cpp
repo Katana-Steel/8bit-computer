@@ -1,7 +1,7 @@
 #include "cpu.hpp"
 #include "memory.hpp"
 #include "utils/logger.hpp"
-#include <fmt/format.h>
+#include <format>
 
 int main() {
   // setup logging framework
@@ -11,12 +11,13 @@ int main() {
   Memory memory{};
   // attaching main memory to the CPU
   cpu.mainMem = &memory;
+  memory.loadMemoryFromFile("core.mem");
 
   // Emulation loop
   while (true) {
     // Fetch the next instruction
     uint8_t instruction = memory.read(cpu.getProgramCounter());
-    log.logInfo(fmt::format("Got instruction 0x{:x02} from memory at 0x{:x04}",
+    log.logInfo(std::format("Got instruction 0x{:02x} from memory at 0x{:04x}",
                             instruction, cpu.getProgramCounter()));
     // Execute the instruction
     cpu.executeInstruction(instruction);
@@ -29,6 +30,9 @@ int main() {
       break;
     }
   }
+
+  // dump core memory
+  memory.dumpMemoryToFile("core.mem");
 
   return 0;
 }
