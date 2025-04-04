@@ -1,0 +1,14 @@
+# Exclude compile_commands.json
+compile_commands.json
+
+# CMake build directory
+build/
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+.cache/
+
+# System files
+.DS_Store
+Thumbs.db
