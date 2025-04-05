@@ -1,3 +1,5 @@
+// copyright Rene Kjellerup 2025
+// released under the GNU GPL version 3 or later
 #include <array>
 #include <cstdint>
 #include <string_view>

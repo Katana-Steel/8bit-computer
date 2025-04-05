@@ -1,3 +1,5 @@
+// copyright Rene Kjellerup 2025
+// released under the GNU GPL version 3 or later
 #ifndef CPU_HPP
 #define CPU_HPP
 

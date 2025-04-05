@@ -1,3 +1,5 @@
+// copyright Rene Kjellerup 2025
+// released under the GNU GPL version 3 or later
 #include "parser.hpp"
 #include "utils/logger.hpp"
 #include <cstdint>
