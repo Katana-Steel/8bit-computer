@@ -73,6 +73,15 @@ void CPU::executeInstruction(uint8_t instruction) {
     statusFlags = 0;
   } break;
 
+  case 0x7: // NAND two registers and store the result in register[0]
+    if (regIndex < 8) {
+      registers[0] =
+          ~(registers[0] & registers[regIndex]); // Perform NAND operation
+      updateStatusFlags(
+          registers[0]); // Update status flags (e.g., zero, carry, overflow)
+    }
+    break;
+
   default:
     // Handle unknown opcode
     break;

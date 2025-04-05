@@ -44,12 +44,13 @@ std::vector<Instruction> Parser::parse(const std::string &inputFile) {
       instr.operands.push_back(target & 0xFF);        // Low byte
     } else if (opcode == "LDi") {
       instr.opcode = 0x10;
-      uint8_t reg, value;
+      uint8_t reg;
+      uint16_t value;
       iss >> reg;
       iss >> value;
       instr.opcode |= reg & 0x0F; // store the dest register in the lower 4bits
-      instr.operands.push_back(value);
-      log.logInfo(std::format("LDi found load value {:02x}", value));
+      instr.operands.push_back(value & 0xFF);
+      log.logInfo(std::format("LDi found load value 0x{:02x}", value));
     } else if (opcode == "LDm") {
       instr.opcode = 0x10;
       uint16_t target;
@@ -59,7 +60,7 @@ std::vector<Instruction> Parser::parse(const std::string &inputFile) {
           (reg | 0x08) & 0x0F; // store the dest register in the lower 4bits
       instr.operands.push_back((target >> 8) & 0xFF);
       instr.operands.push_back(target & 0xFF);
-      log.logInfo(std::format("LDm found load target {:04x}", target));
+      log.logInfo(std::format("LDm found load target 0x{:04x}", target));
     } else if (opcode == "ST") {
       instr.opcode = 0x20;
       uint8_t reg;
