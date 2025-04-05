@@ -16,24 +16,25 @@ void Memory::write(uint16_t address, uint8_t value) {
   memoryArray[address] = value;
 }
 
-void Memory::loadMemoryFromFile(std::string_view filename) {
+bool Memory::loadMemoryFromFile(std::string_view filename) {
   Logger log{Logger::LogLevel::ERROR};
   // Ensure the file is in the current working directory
   std::filesystem::path filePath = std::filesystem::current_path() / filename;
 
   if (!std::filesystem::exists(filePath)) {
     log.logError("Memory File doesn't exist\nMemory untouched");
-    return;
+    return false;
   }
 
   std::ifstream file(filePath, std::ios::binary);
   if (!file.is_open()) {
     log.logError("Can't open Memory File\nMemory untouched");
-    return;
+    return false;
   }
 
   // Read up to 65KB (65536 bytes) into memoryArray
   file.read(reinterpret_cast<char *>(memoryArray.data()), sizeof(memoryArray));
+  return true;
 }
 
 void Memory::dumpMemoryToFile(std::string_view filename) const {

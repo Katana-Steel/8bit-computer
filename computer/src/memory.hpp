@@ -7,7 +7,7 @@ public:
 
   uint8_t read(uint16_t address) const;
   void write(uint16_t address, uint8_t value);
-  void loadMemoryFromFile(std::string_view filename);
+  bool loadMemoryFromFile(std::string_view filename);
   void dumpMemoryToFile(std::string_view filename) const;
 
 private:
