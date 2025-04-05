@@ -31,7 +31,7 @@ Together, these components provide a complete environment for writing, compiling
 
 **Build the project**:
 
-```bash
+```sh
 mkdir build
 cd build
 cmake -G Ninja ..
@@ -40,7 +40,7 @@ cmake --build .
 
 **Run the emulator**:
 
-```bash
+```sh
 assembler/assembly_compiler ../samples/input.asm core.mem
 computer/8bit_computer_emulator
 hexdump -C core.mem
