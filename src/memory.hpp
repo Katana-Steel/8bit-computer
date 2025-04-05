@@ -12,5 +12,5 @@ public:
 
 private:
   // max memory of 16bit addressing for the 8bit computer
-  std::array<uint8_t, UINT16_MAX> memoryArray;
+  std::array<uint8_t, UINT16_MAX + 1> memoryArray;
 };

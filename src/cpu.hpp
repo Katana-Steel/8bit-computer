@@ -20,7 +20,7 @@ public:
 private:
   uint16_t pc;
   void handleInterrupts();
-  void updateStatusFlags();
+  void updateStatusFlags(const int16_t result);
   // Additional private methods and properties can be declared here
 };
 

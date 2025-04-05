@@ -1,4 +1,5 @@
 #include "cpu.hpp"
+#include "memory.hpp"
 #include <cstdint>
 
 CPU::CPU()
@@ -6,9 +7,74 @@ CPU::CPU()
       mainMem(nullptr) {}
 
 void CPU::executeInstruction(uint8_t instruction) {
-  // Implementation of instruction execution logic
-  // This will include decoding the instruction and executing the corresponding
-  // operation
+  // Decode the instruction
+  uint8_t opcode = (instruction & 0xF0) >> 4; // Extract the upper 4 bits
+  uint8_t regIndex = (instruction & 0x0F);    // Extract the lower 4 bits
+
+  switch (opcode) {
+  case 0x1: // Load value into a register
+    if (regIndex < 8) {
+      uint8_t value = mainMem->read(pc + 1); // Fetch the next byte as the value
+      registers[regIndex] = value;
+      pc++; // Increment program counter to account for the value byte
+    } else {
+      uint16_t address = (mainMem->read(pc + 1) << 8) | mainMem->read(pc + 2);
+      registers[regIndex & 0x7] = mainMem->read(address);
+      pc += 2; // Increment program counter to account for the 2-byte address
+    }
+    break;
+  case 0x2: // Store value from a register to memory
+    if (regIndex < 8) {
+      uint16_t address = (mainMem->read(pc + 1) << 8) |
+                         mainMem->read(pc + 2); // Fetch 16-bit address
+      mainMem->write(
+          address,
+          registers[regIndex]); // Store the register value at the address
+      pc += 2; // Increment program counter to account for the 2-byte address
+    }
+    break;
+  case 0x3: // Add a register to register[0]
+    if (regIndex < 8) {
+      int16_t tmp = registers[0] + registers[regIndex];
+      registers[0] = tmp & 0xFF; // Add the value of the specified
+                                 // register to register[0]
+      updateStatusFlags(
+          tmp); // Update status flags (e.g., zero, carry, overflow)
+    }
+    break;
+  case 0x4: // Subtract a register from register[0]
+    if (regIndex < 8) {
+      int16_t tmp = registers[0] - registers[regIndex];
+      registers[0] -= tmp & 0xFF;
+      // from register[0]
+      updateStatusFlags(
+          tmp); // Update status flags (e.g., zero, carry, overflow)
+    }
+    break;
+  case 0x5: // Jump to a specific memory address
+  {
+    uint16_t address = (mainMem->read(pc + 1) << 8) |
+                       mainMem->read(pc + 2); // Fetch 16-bit address
+    pc = address - 1; // Set the program counter to the address (subtract 1
+                      // because pc will be incremented later)
+  } break;
+  case 0x6: // Jump if Zero (JZ)
+  {
+    uint16_t address = (mainMem->read(pc + 1) << 8) |
+                       mainMem->read(pc + 2); // Fetch 16-bit address
+    if (statusFlags & 0x01) { // Check if the zero flag (bit 0) is set
+      pc = address - 1; // Set the program counter to the address (subtract 1
+                        // because pc will be incremented later)
+    } else {
+      pc += 2; // Skip the address bytes if the jump is not taken
+    }
+    statusFlags = 0;
+  } break;
+
+  default:
+    // Handle unknown opcode
+    break;
+  }
 
   // update the program counter
   if (pc == (0xffff)) {
@@ -33,6 +99,18 @@ void CPU::handleInterrupts() {
   // Handle CPU interrupts
 }
 
-void CPU::updateStatusFlags() {
+void CPU::updateStatusFlags(const int16_t result) {
   // Update the status flags based on the current state of the CPU
+  if (registers[0] == 0) {
+    statusFlags |= 0x01; // Set the zero flag (bit 0) to 1
+  } else {
+    statusFlags &= ~0x01; // Clear the zero flag (bit 0)
+  }
+
+  if (result > 0xFF ||
+      result < 0) {      // Check for overflow (carry) or underflow (borrow)
+    statusFlags |= 0x02; // Set the carry flag (bit 1) to 1
+  } else {
+    statusFlags &= ~0x02; // Clear the carry flag (bit 1)
+  }
 }

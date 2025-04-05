@@ -12,6 +12,15 @@ int main() {
   // attaching main memory to the CPU
   cpu.mainMem = &memory;
   memory.loadMemoryFromFile("core.mem");
+  memory.write(0xfe00, 0x50); /// jmp 0x0000
+  memory.write(0x0000, 0x18); /// ld ax 0xfe00
+  memory.write(0x0001, 0xfe); //// address for the load
+  memory.write(0x0003, 0x19); /// ld bx 0xfe00
+  memory.write(0x0004, 0xfe); //// address for the load
+  memory.write(0x0006, 0x31); /// add ax bx
+  memory.write(0x0007, 0x20); /// st ax 0xfe05
+  memory.write(0x0008, 0xfe); //// high byte for the store address
+  memory.write(0x0009, 0x05); //// low byte for the store address
 
   // Emulation loop
   while (true) {
