@@ -10,23 +10,6 @@ The 8-bit Computer Emulator is a C++26 application that simulates the behavior o
 * **Memory Management**: Simulates memory operations, allowing for reading and writing to memory addresses.
 * **Logging**: Provides a logging mechanism to track events and errors during emulation.
 
-## Project Structure
-
-```plaintext
-8bit-computer-emulator
-├── src
-│   ├── main.cpp          # Entry point of the application
-│   ├── cpu.cpp           # Implementation of the CPU class
-│   ├── cpu.hpp           # Declaration of the CPU class
-│   ├── memory.cpp        # Implementation of the Memory class
-│   ├── memory.hpp        # Declaration of the Memory class
-│   └── utils
-│       ├── logger.cpp    # Implementation of the Logger class
-│       └── logger.hpp    # Declaration of the Logger class
-├── CMakeLists.txt        # CMake configuration file
-└── README.md             # Project documentation
-```
-
 ## Setup Instructions
 
 **Clone the repository**:
@@ -51,4 +34,11 @@ This project is licensed under the GNU GPLv3 or later License. See the LICENSE f
 
 ```plaintext
 ./8bit-computer-emulator
+```
+
+```plaintext
+mkdir build
+cd build
+cmake -G Ninja ..
+cmake --build .
 ```
