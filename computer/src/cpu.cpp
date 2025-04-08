@@ -57,8 +57,26 @@ void CPU::executeInstruction(uint8_t instruction) {
   {
     uint16_t address = (mainMem->read(pc + 1) << 8) |
                        mainMem->read(pc + 2); // Fetch 16-bit address
-    pc = address - 1; // Set the program counter to the address (subtract 1
-                      // because pc will be incremented later)
+    address--; // subtract 1 because pc will be incremented later if set.
+    pc += 2;   // pre-Skip the address bytes if the jump is not taken
+    switch (regIndex) {
+    default: // Unconditional jump
+      pc = address;
+      break;
+    case 1: // Jump if zero
+      if (statusFlags & 0x01)
+        pc = address;
+      break;
+    case 2: // Jump on Carry
+      if (statusFlags & 0x02)
+        pc = address;
+      break;
+    case 3: // Jump on Zero and Carry
+      if (statusFlags & 0x03)
+        pc = address;
+      break;
+    }
+
   } break;
   case 0x6: // Jump if Zero (JZ)
   {

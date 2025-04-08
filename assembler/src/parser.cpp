@@ -80,7 +80,19 @@ std::vector<Instruction> Parser::parse(const std::string &inputFile) {
       iss >> reg;
       instr.opcode |= (reg & 0x0F); // store the src register in the lower 4bits
     } else if (opcode == "JZ") {
-      instr.opcode = 0x60;
+      instr.opcode = 0x51;
+      uint16_t target;
+      iss >> std::hex >> target;
+      instr.operands.push_back((target >> 8) & 0xFF); // High byte
+      instr.operands.push_back(target & 0xFF);        // Low byte
+    } else if (opcode == "JC") {
+      instr.opcode = 0x52;
+      uint16_t target;
+      iss >> std::hex >> target;
+      instr.operands.push_back((target >> 8) & 0xFF); // High byte
+      instr.operands.push_back(target & 0xFF);        // Low byte
+    } else if (opcode == "JZC") {
+      instr.opcode = 0x53;
       uint16_t target;
       iss >> std::hex >> target;
       instr.operands.push_back((target >> 8) & 0xFF); // High byte
