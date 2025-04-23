@@ -157,7 +157,7 @@ void CPU::handleInterrupts() {
 
 void CPU::updateStatusFlags(const int16_t result) {
   // Update the status flags based on the current state of the CPU
-  if (registers[0] == 0) {
+  if (result == 0) {
     statusFlags |= 0x01; // Set the zero flag (bit 0) to 1
   } else {
     statusFlags &= ~0x01; // Clear the zero flag (bit 0)
@@ -168,5 +168,10 @@ void CPU::updateStatusFlags(const int16_t result) {
     statusFlags |= 0x02; // Set the carry flag (bit 1) to 1
   } else {
     statusFlags &= ~0x02; // Clear the carry flag (bit 1)
+  }
+  if (result < 0) {
+    statusFlags |= 0x04; // Set the negative flag (bit 2) to 1
+  } else {
+    statusFlags &= ~0x04; // Clear the negative flag (bit 2)
   }
 }
