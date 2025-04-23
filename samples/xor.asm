@@ -3,8 +3,8 @@ LDi    2           67
 LDi    3           88
 ST     2       0xa002
 ST     3       0xa003
-JMP    0
-ORIGIN 0
+JMP    1
+ORIGIN 1
 LDm    0       0xa002
 LDm    1       0xa003
 ST 0 0xb000
@@ -18,4 +18,4 @@ LDm 0 0xa003 # B in r0
 NAND 2
 LDm 2 0xb002
 NAND 2
-ST 0 0xa001
+ST 0 0x0000

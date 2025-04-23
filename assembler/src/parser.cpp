@@ -32,7 +32,6 @@ std::vector<Instruction> Parser::parse(const std::string &inputFile) {
           newAddress; // Update the starting address for the next instructions
       continue;       // Skip to the next line
     }
-
     Instruction instr;
     instr.address = address;
 
@@ -102,6 +101,21 @@ std::vector<Instruction> Parser::parse(const std::string &inputFile) {
       uint8_t reg;
       iss >> reg;
       instr.opcode |= (reg & 0x0F); // store the src register in the lower 4bits
+    } else if (opcode == "RAW") {   // write upto 4 bytes of raw data
+      uint16_t rawData = 0;
+      iss >> std::hex >> rawData;
+      instr.opcode = (rawData >> 8) & 0xFF; // Store the raw data in the opcode
+      if (instr.opcode == 0x00)
+        instr.opcode = rawData & 0xFF;
+      else
+        instr.operands.push_back(rawData & 0xFF);
+      rawData = 0;
+      iss >> std::hex >> rawData;
+      if (rawData != 0x00) {
+        instr.operands.push_back((rawData >> 8) &
+                                 0xFF); // Store the raw data in the opcode
+        instr.operands.push_back(rawData & 0xFF);
+      }
     } else {
       throw std::runtime_error("Unknown opcode: " + opcode);
     }

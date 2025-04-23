@@ -13,7 +13,7 @@ Together, these components provide a complete environment for writing, compiling
 
 **CPU** features:
 
-    * 7 basic instructions
+    * few basic instructions
     * 16bit addressing
 
 **Memory** features:
